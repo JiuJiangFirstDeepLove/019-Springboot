@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>绩效设置</title>
+<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+<!--			<div class="form-group col-sm-2">-->
+<!--				<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="计划主题">-->
+<!--			</div>-->
+<!--			<a class="btn btn-default" @click="query">查询</a>-->
+			<#if shiro.hasPermission("person:merit:save")>
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("person:merit:update")>
+			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("person:merit:delete")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">设置日期</div>
+				<div class="col-sm-10">
+					<input v-model="merit.setDate"  placeholder="设置日期" name="setDate"
+						   id="setDate" class="layui-input" autocomplete="off">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">月考核量</div>
+				<div class="col-sm-10">
+					<input type="number" class="form-control"  v-model="merit.monthQuota" placeholder="月考核量"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">周考核量</div>
+				<div class="col-sm-10">
+					<input  type="number" class="form-control" v-model="merit.weekQuota" placeholder="周考核量">
+					</input>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/js/modules/person/merit.js?_${.now?long}"></script>
+</body>
+</html>

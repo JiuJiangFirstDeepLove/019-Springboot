@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>考勤记录</title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+                <div class="form-group col-sm-2">
+                    <input class="form-control" id="workMonthQuery" v-model="q.workMonth" @keyup.enter="query"
+                           placeholder="工作月份">
+                </div>
+<!--                <div class="form-group col-sm-2">-->
+<!--                    <input class="form-control" id="workDateQuery" v-model="q.workDate" @keyup.enter="query"-->
+<!--                           placeholder="工作日期">-->
+<!--                </div>-->
+                <div class="form-group col-sm-2">
+                    <select v-model="q.status" @keyup.enter="query" class="form-control" placeholder="状态">
+                        <option selected="selected" value="">全部</option>
+                        <option value="0">正常</option>
+                        <option value="1">迟到</option>
+                        <option value="2">早退</option>
+                        <option value="3">加班</option>
+                    </select>
+                </div>
+<!--            <div class="form-group col-sm-6">-->
+                <a class="btn btn-default" @click="query">查询</a>
+                <#if shiro.hasPermission("person:work:save")>
+                    <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;上班打卡</a>
+                </#if>
+                <#if shiro.hasPermission("person:work:update")>
+                    <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;下班打卡</a>
+                </#if>
+                <#if shiro.hasPermission("person:work:delete")>
+                    <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                </#if>
+<!--            </div>-->
+        </div>
+<table id="jqGrid"></table>
+<div id="jqGridPager"></div>
+</div>
+
+<div v-show="!showList" class="panel panel-default">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">工作日期<em style="color: red;">*</em></div>
+            <div class="col-sm-10">
+                <input readonly="isReadOnly" type="text"  v-model="work.workDate" placeholder="工作日期"
+                       id="workDate" class="form-control" >
+            </div>
+        </div>
+        <div class="form-group" v-show="upFlag">
+            <div class="col-sm-2 control-label">上班时间<em style="color: red;">*</em></div>
+            <div class="col-sm-10">
+                <input v-model="work.upTime" placeholder="上班时间" name="upTime"
+                       id="upTime" class="layui-input" autocomplete="off" required>
+            </div>
+        </div>
+        <div class="form-group" v-show="downFlag">
+            <div class="col-sm-2 control-label">下班时间<em style="color: red;">*</em></div>
+            <div class="col-sm-10">
+                <input v-model="work.downTime" placeholder="下班时间" name="downTime"
+                       id="downTime" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+        </div>
+    </form>
+</div>
+</div>
+
+
+<script src="${request.contextPath}/statics/js/modules/person/work.js?_${.now?long}"></script>
+</body>
+</html>

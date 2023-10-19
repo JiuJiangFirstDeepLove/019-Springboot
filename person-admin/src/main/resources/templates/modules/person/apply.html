@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>转正申请</title>
+<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-2">
+<!--				<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="用户名">-->
+				<select id="userIdQuery" v-model="q.applyUserId" @keyup.enter="query" class="form-control" >
+					<option selected="selected" value="">全部</option>
+					<option v-for="user in users" :value="user.userId">
+						{{ user.name }}
+					</option>
+				</select>
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			<#if shiro.hasPermission("person:apply:save")>
+			<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("person:apply:approval")>
+			<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;审核</a>
+			</#if>
+			<#if shiro.hasPermission("person:apply:delete")>
+			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">申请日期</div>
+				<div class="col-sm-10" >
+					<input type="text" id="applyDate" class="form-control" v-model="apply.applyDate" placeholder="申请日期"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">申请内容</div>
+				<div class="col-sm-10">
+					<textarea type="text" class="form-control" v-model="apply.applyContent" placeholder="申请内容">
+					</textarea>
+				</div>
+			</div>
+			<div class="form-group" v-show="approvalFlag">
+				<div class="col-sm-2 control-label">审核日期</div>
+				<div class="col-sm-10">
+					<input type="text" id="approvalDate" class="form-control" v-model="apply.approvalDate" placeholder="审核日期"/>
+				</div>
+			</div>
+			<div class="form-group" v-show="approvalFlag">
+				<div class="col-sm-2 control-label">审核意见</div>
+				<div class="col-sm-10">
+					<textarea  class="form-control" v-model="apply.approvalOpinion" placeholder="审核意见">
+					</textarea>
+				</div>
+			</div>
+			<div class="form-group" v-show="approvalFlag">
+                <div class="col-sm-2 control-label">审核结果</div>
+                <label class="radio-inline">
+                    <input type="radio" name="approvalResult" value="1" v-model="apply.approvalResult"/> 未通过
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="approvalResult" value="2" v-model="apply.approvalResult"/> 通过
+                </label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- 选择部门 -->
+<div id="deptLayer" style="display: none;padding:10px;">
+	<ul id="deptTree" class="ztree"></ul>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/person/apply.js?_${.now?long}"></script>
+</body>
+</html>
